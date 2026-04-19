@@ -1,0 +1,440 @@
+
+<h2 class="sr-only">ระบบจองสนามแบดมินตัน — สมัครสมาชิก เข้าสู่ระบบ และจองสนาม</h2>
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.app{min-height:600px;background:var(--color-background-tertiary);font-family:var(--font-sans)}
+.nav{background:var(--color-background-primary);border-bottom:0.5px solid var(--color-border-tertiary);padding:12px 24px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-size:16px;font-weight:500;color:var(--color-text-primary);display:flex;align-items:center;gap:8px}
+.nav-user{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--color-text-secondary)}
+.avatar{width:32px;height:32px;border-radius:50%;background:#9FE1CB;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:500;color:#085041;overflow:hidden}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.page{display:none;padding:24px}
+.page.active{display:block}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:24px}
+.form-group{margin-bottom:16px}
+label{display:block;font-size:13px;color:var(--color-text-secondary);margin-bottom:6px}
+input,select{width:100%;padding:8px 12px;font-size:14px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary)}
+input:focus,select:focus{outline:none;border-color:#1D9E75}
+.btn{padding:9px 20px;border-radius:var(--border-radius-md);font-size:14px;font-weight:500;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary);transition:background 0.15s}
+.btn:hover{background:var(--color-background-secondary)}
+.btn-primary{background:#1D9E75;color:#fff;border-color:#1D9E75}
+.btn-primary:hover{background:#0F6E56}
+.btn-danger{background:#E24B4A;color:#fff;border-color:#E24B4A}
+.btn-danger:hover{background:#A32D2D}
+.btn-sm{padding:6px 14px;font-size:13px}
+.btn-link{background:none;border:none;color:#1D9E75;font-size:13px;cursor:pointer;padding:0;font-weight:500}
+.btn-link:hover{color:#0F6E56;background:none}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.section-title{font-size:18px;font-weight:500;margin-bottom:20px;color:var(--color-text-primary)}
+.badge{display:inline-block;padding:3px 10px;border-radius:var(--border-radius-md);font-size:12px;font-weight:500}
+.badge-green{background:#EAF3DE;color:#3B6D11}
+.badge-amber{background:#FAEEDA;color:#854F0B}
+.tab-bar{display:flex;gap:4px;border-bottom:0.5px solid var(--color-border-tertiary);margin-bottom:24px}
+.tab{padding:10px 18px;font-size:14px;cursor:pointer;color:var(--color-text-secondary);border-bottom:2px solid transparent;margin-bottom:-0.5px}
+.tab.active{color:#1D9E75;border-bottom-color:#1D9E75;font-weight:500}
+.court-card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:14px;cursor:pointer;transition:border-color 0.15s;background:var(--color-background-primary)}
+.court-card:hover{border-color:#1D9E75}
+.court-card.selected{border:2px solid #1D9E75;background:#E1F5EE}
+.slot-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.slot{padding:8px 4px;text-align:center;border-radius:var(--border-radius-md);font-size:13px;cursor:pointer;border:0.5px solid var(--color-border-secondary)}
+.slot.available{background:var(--color-background-primary);color:var(--color-text-primary)}
+.slot.available:hover{border-color:#1D9E75;background:#E1F5EE}
+.slot.booked{background:#F1EFE8;color:#B4B2A9;cursor:not-allowed}
+.slot.selected{background:#1D9E75;color:#fff;border-color:#1D9E75}
+.date-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:6px;margin-bottom:20px}
+.date-btn{padding:8px 4px;text-align:center;border-radius:var(--border-radius-md);font-size:12px;cursor:pointer;border:0.5px solid var(--color-border-secondary);background:var(--color-background-primary);color:var(--color-text-primary)}
+.date-btn:hover{border-color:#1D9E75}
+.date-btn.active{background:#1D9E75;color:#fff;border-color:#1D9E75}
+.date-btn .day-num{font-size:16px;font-weight:500;display:block}
+.participant-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.participant-row input{flex:1}
+.booking-row{display:grid;grid-template-columns:90px 1fr 100px 100px 80px;gap:12px;align-items:center;padding:12px 0;border-bottom:0.5px solid var(--color-border-tertiary);font-size:14px}
+.booking-row:last-child{border-bottom:none}
+.alert{padding:12px 16px;border-radius:var(--border-radius-md);font-size:14px;margin-bottom:16px}
+.alert-success{background:#EAF3DE;color:#3B6D11;border:0.5px solid #C0DD97}
+.alert-error{background:#FCEBEB;color:#A32D2D;border:0.5px solid #F7C1C1}
+.alert-info{background:#E6F1FB;color:#185FA5;border:0.5px solid #B5D4F4}
+.avatar-preview{width:72px;height:72px;border-radius:50%;background:#9FE1CB;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:500;color:#085041;margin:0 auto 8px;overflow:hidden}
+.avatar-preview img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.pref-card{border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:12px 16px;cursor:pointer;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px}
+.pref-card.selected{border:2px solid #1D9E75;background:#E1F5EE}
+.hint{font-size:12px;color:var(--color-text-secondary);margin-top:4px}
+.divider{border:none;border-top:0.5px solid var(--color-border-tertiary);margin:16px 0}
+.back-link{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--color-text-secondary);cursor:pointer;margin-bottom:20px}
+.back-link:hover{color:var(--color-text-primary)}
+</style>
+
+<div class="app" id="app">
+  <div class="nav">
+    <div class="nav-logo">🏸 สนามแบดมินตัน</div>
+    <div class="nav-user" id="nav-user" style="display:none">
+      <div class="avatar" id="nav-avatar">ผ</div>
+      <span id="nav-name"></span>
+      <button class="btn btn-sm" onclick="logout()">ออกจากระบบ</button>
+    </div>
+  </div>
+
+  <!-- AUTH PAGE -->
+  <div class="page active" id="page-auth" style="max-width:460px;margin:40px auto">
+    <div id="alert-auth"></div>
+    <div class="tab-bar" id="auth-tabs">
+      <div class="tab active" id="tab-login" onclick="switchAuth('login')">เข้าสู่ระบบ</div>
+      <div class="tab" id="tab-register" onclick="switchAuth('register')">สมัครสมาชิก</div>
+    </div>
+
+    <!-- Login -->
+    <div id="form-login">
+      <div class="card">
+        <div class="form-group">
+          <label>ชื่อผู้ใช้ (Username)</label>
+          <input type="text" id="login-user" placeholder="กรอก username ของคุณ">
+        </div>
+        <div class="form-group">
+          <label>รหัสผ่าน</label>
+          <input type="password" id="login-pass" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+        </div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px" onclick="doLogin()">เข้าสู่ระบบ</button>
+        <div style="text-align:center;margin-top:14px">
+          <button class="btn-link" onclick="switchAuth('forgot')">ลืมรหัสผ่าน?</button>
+        </div>
+        <p style="text-align:center;margin-top:10px;font-size:13px;color:var(--color-text-secondary)">ยังไม่มีบัญชี? <span style="color:#1D9E75;cursor:pointer;font-weight:500" onclick="switchAuth('register')">สมัครสมาชิก</span></p>
+      </div>
+    </div>
+
+    <!-- Forgot Password -->
+    <div id="form-forgot" style="display:none">
+      <div class="card">
+        <div class="back-link" onclick="switchAuth('login')">← กลับไปหน้าเข้าสู่ระบบ</div>
+        <div style="margin-bottom:20px">
+          <div style="font-size:16px;font-weight:500;margin-bottom:6px;color:var(--color-text-primary)">ลืมรหัสผ่าน</div>
+          <div style="font-size:13px;color:var(--color-text-secondary)">กรอก Username ของคุณ ระบบจะรีเซ็ตรหัสผ่านเป็น <strong style="color:var(--color-text-primary)">bad123</strong></div>
+        </div>
+        <div class="form-group">
+          <label>ชื่อผู้ใช้ (Username)</label>
+          <input type="text" id="forgot-user" placeholder="กรอก username ของคุณ" onkeydown="if(event.key==='Enter')doForgot()">
+        </div>
+        <div id="alert-forgot"></div>
+        <button class="btn btn-primary" style="width:100%" onclick="doForgot()">รีเซ็ตรหัสผ่าน</button>
+      </div>
+    </div>
+
+    <!-- Register -->
+    <div id="form-register" style="display:none">
+      <div class="card">
+        <div style="text-align:center;margin-bottom:20px">
+          <div class="avatar-preview" id="reg-avatar-preview">+</div>
+          <label style="display:inline-block;padding:6px 16px;font-size:13px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);cursor:pointer;color:var(--color-text-secondary)">
+            อัปโหลดรูปโปรไฟล์
+            <input type="file" accept="image/*" style="display:none" onchange="previewAvatar(this)">
+          </label>
+        </div>
+        <div class="grid2">
+          <div class="form-group"><label>ชื่อจริง *</label><input type="text" id="reg-fname" placeholder="ชื่อ"></div>
+          <div class="form-group"><label>นามสกุล *</label><input type="text" id="reg-lname" placeholder="นามสกุล"></div>
+        </div>
+        <div class="form-group"><label>ชื่อเล่น *</label><input type="text" id="reg-nick" placeholder="ชื่อเล่น (แสดงในระบบ)"></div>
+        <div class="form-group">
+          <label>ชื่อผู้ใช้ (Username) * <span style="color:#1D9E75">— ใช้สำหรับ login</span></label>
+          <input type="text" id="reg-username" placeholder="เช่น john123" autocomplete="off">
+          <div class="hint">ภาษาอังกฤษ ตัวเลข หรือขีดล่าง ไม่มีช่องว่าง</div>
+        </div>
+        <div class="form-group">
+          <label>แผนก *</label>
+          <select id="reg-dept">
+            <option value="">-- เลือกแผนก --</option>
+            <option>ฝ่ายบริหาร</option><option>ฝ่ายการตลาด</option><option>ฝ่ายขาย</option>
+            <option>ฝ่ายบัญชี</option><option>ฝ่ายไอที</option><option>ฝ่ายทรัพยากรบุคคล</option>
+            <option>ฝ่ายปฏิบัติการ</option><option>ฝ่ายวิจัยและพัฒนา</option><option>ฝ่ายลูกค้าสัมพันธ์</option>
+          </select>
+        </div>
+        <hr class="divider">
+        <div class="form-group"><label>รหัสผ่าน *</label><input type="password" id="reg-pass" placeholder="อย่างน้อย 6 ตัวอักษร"></div>
+        <div class="form-group"><label>ยืนยันรหัสผ่าน *</label><input type="password" id="reg-pass2" placeholder="กรอกรหัสผ่านอีกครั้ง"></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px" onclick="doRegister()">สมัครสมาชิก</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN APP -->
+  <div class="page" id="page-main">
+    <div style="max-width:900px;margin:0 auto">
+      <div class="tab-bar">
+        <div class="tab active" id="main-tab-book" onclick="switchMain('book')">จองสนาม</div>
+        <div class="tab" id="main-tab-mybooking" onclick="switchMain('mybooking')">การจองของฉัน</div>
+      </div>
+      <div id="section-book">
+        <div class="card" style="margin-bottom:16px">
+          <div class="section-title">เลือกวันที่</div>
+          <div class="date-grid" id="date-grid"></div>
+          <div class="section-title" style="margin-top:4px">เลือกสนาม</div>
+          <div class="grid3">
+            <div class="court-card" id="court-1" onclick="selectCourt(1)"><div style="font-weight:500;margin-bottom:4px">สนามที่ 1</div><div style="font-size:12px;color:var(--color-text-secondary)">มาตรฐาน BWF</div></div>
+            <div class="court-card" id="court-2" onclick="selectCourt(2)"><div style="font-weight:500;margin-bottom:4px">สนามที่ 2</div><div style="font-size:12px;color:var(--color-text-secondary)">มาตรฐาน BWF</div></div>
+            <div class="court-card" id="court-3" onclick="selectCourt(3)"><div style="font-weight:500;margin-bottom:4px">สนามที่ 3</div><div style="font-size:12px;color:var(--color-text-secondary)">มาตรฐาน BWF</div></div>
+          </div>
+          <div style="margin-top:20px">
+            <div class="section-title">เลือกช่วงเวลา</div>
+            <div style="display:flex;gap:16px;font-size:12px;margin-bottom:8px;color:var(--color-text-secondary)">
+              <span style="display:flex;align-items:center;gap:4px"><span style="width:12px;height:12px;background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);display:inline-block;border-radius:2px"></span>ว่าง</span>
+              <span style="display:flex;align-items:center;gap:4px"><span style="width:12px;height:12px;background:#1D9E75;display:inline-block;border-radius:2px"></span>เลือกแล้ว</span>
+              <span style="display:flex;align-items:center;gap:4px"><span style="width:12px;height:12px;background:#F1EFE8;display:inline-block;border-radius:2px"></span>ถูกจองแล้ว</span>
+            </div>
+            <div class="slot-grid" id="slot-grid"></div>
+          </div>
+        </div>
+        <div class="card" id="booking-form-card" style="display:none">
+          <div class="section-title">รายละเอียดการจอง</div>
+          <div id="booking-summary" style="padding:12px;background:var(--color-background-secondary);border-radius:var(--border-radius-md);font-size:14px;margin-bottom:20px;color:var(--color-text-secondary)"></div>
+          <div class="form-group">
+            <label>ความต้องการของสนาม</label>
+            <div class="pref-card" id="pref-open" onclick="selectPref('open')"><span style="font-size:20px">👥</span><div><div style="font-weight:500;font-size:14px">เปิดรับคนอื่นร่วมด้วย</div><div style="font-size:12px;color:var(--color-text-secondary)">ยินดีให้ผู้เล่นอื่นเข้าร่วมได้</div></div></div>
+            <div class="pref-card" id="pref-private" onclick="selectPref('private')"><span style="font-size:20px">🔒</span><div><div style="font-weight:500;font-size:14px">เฉพาะคนรู้จักเท่านั้น</div><div style="font-size:12px;color:var(--color-text-secondary)">ไม่รับผู้เล่นจากภายนอก</div></div></div>
+          </div>
+          <div class="form-group">
+            <label>ผู้เข้าร่วม (สูงสุด 12 คน)</label>
+            <div id="participants-list"></div>
+            <div class="hint" id="participant-count">เพิ่มได้อีก 12 คน</div>
+          </div>
+          <div id="alert-booking"></div>
+          <button class="btn btn-primary" onclick="confirmBooking()">ยืนยันการจอง</button>
+        </div>
+      </div>
+      <div id="section-mybooking" style="display:none">
+        <div class="card">
+          <div class="section-title">การจองของฉัน</div>
+          <div id="my-bookings-list"><div style="text-align:center;padding:40px;color:var(--color-text-secondary);font-size:14px">ยังไม่มีการจอง</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+var S={
+  users:JSON.parse(localStorage.getItem('bm_users2')||'{}'),
+  bookings:JSON.parse(localStorage.getItem('bm_bookings2')||'[]'),
+  cur:null,selDate:null,selCourt:null,selSlot:null,selPref:null,
+  participants:[],avatarData:null
+};
+var SLOTS=['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
+var COURTS=['สนามที่ 1','สนามที่ 2','สนามที่ 3'];
+var DEFAULT_PASS='bad123';
+
+function save(){try{localStorage.setItem('bm_users2',JSON.stringify(S.users));localStorage.setItem('bm_bookings2',JSON.stringify(S.bookings));}catch(e){}}
+function fmtDateKey(d){return d.toISOString().split('T')[0];}
+function fmtDate(d){return d.toLocaleDateString('th-TH',{weekday:'short',day:'numeric',month:'short'});}
+function initials(u){return (u.fname||'ผ')[0].toUpperCase();}
+function showAlert(id,msg,type){var el=document.getElementById(id);if(el)el.innerHTML=msg?'<div class="alert alert-'+(type||'error')+'">'+msg+'</div>':'';}
+
+function switchAuth(tab){
+  document.getElementById('form-login').style.display=tab==='login'?'block':'none';
+  document.getElementById('form-forgot').style.display=tab==='forgot'?'block':'none';
+  document.getElementById('form-register').style.display=tab==='register'?'block':'none';
+  document.getElementById('tab-login').className='tab'+(tab==='login'||tab==='forgot'?' active':'');
+  document.getElementById('tab-register').className='tab'+(tab==='register'?' active':'');
+  document.getElementById('auth-tabs').style.display=tab==='forgot'?'none':'flex';
+  showAlert('alert-auth','');
+  showAlert('alert-forgot','');
+  if(tab==='forgot'){document.getElementById('forgot-user').value=document.getElementById('login-user').value||'';}
+}
+
+function previewAvatar(input){
+  if(!input.files||!input.files[0])return;
+  var r=new FileReader();
+  r.onload=function(e){S.avatarData=e.target.result;document.getElementById('reg-avatar-preview').innerHTML='<img src="'+e.target.result+'">';};
+  r.readAsDataURL(input.files[0]);
+}
+
+function doForgot(){
+  showAlert('alert-forgot','');
+  var username=document.getElementById('forgot-user').value.trim().toLowerCase();
+  if(!username){showAlert('alert-forgot','กรุณากรอก Username');return;}
+  var user=S.users[username];
+  if(!user){showAlert('alert-forgot','ไม่พบ Username นี้ในระบบ กรุณาตรวจสอบอีกครั้ง');return;}
+  S.users[username].pass=DEFAULT_PASS;
+  save();
+  showAlert('alert-forgot','รีเซ็ตรหัสผ่านสำเร็จ! รหัสผ่านใหม่คือ <strong>bad123</strong> กรุณาเปลี่ยนรหัสผ่านหลังเข้าสู่ระบบ','success');
+  setTimeout(function(){
+    switchAuth('login');
+    document.getElementById('login-user').value=username;
+    document.getElementById('login-pass').value='';
+    showAlert('alert-auth','รีเซ็ตรหัสผ่านสำเร็จ รหัสผ่านใหม่คือ <strong>bad123</strong>','info');
+  },2000);
+}
+
+function doRegister(){
+  var fname=document.getElementById('reg-fname').value.trim();
+  var lname=document.getElementById('reg-lname').value.trim();
+  var nick=document.getElementById('reg-nick').value.trim();
+  var username=document.getElementById('reg-username').value.trim();
+  var dept=document.getElementById('reg-dept').value;
+  var pass=document.getElementById('reg-pass').value;
+  var pass2=document.getElementById('reg-pass2').value;
+  if(!fname||!lname||!nick||!username||!dept||!pass||!pass2){showAlert('alert-auth','กรุณากรอกข้อมูลให้ครบถ้วน');return;}
+  if(!/^[a-zA-Z0-9_]+$/.test(username)){showAlert('alert-auth','Username ใช้ได้เฉพาะ a-z, A-Z, 0-9 และขีดล่าง (_)');return;}
+  if(pass.length<6){showAlert('alert-auth','รหัสผ่านต้องมีอย่างน้อย 6 ตัวอักษร');return;}
+  if(pass!==pass2){showAlert('alert-auth','รหัสผ่านและยืนยันรหัสผ่านไม่ตรงกัน');return;}
+  if(S.users[username.toLowerCase()]){showAlert('alert-auth','Username นี้ถูกใช้แล้ว');return;}
+  S.users[username.toLowerCase()]={fname,lname,nick,username:username.toLowerCase(),dept,pass,avatar:S.avatarData||null};
+  save();
+  showAlert('alert-auth','สมัครสมาชิกสำเร็จ! กรุณาเข้าสู่ระบบ','success');
+  switchAuth('login');
+  document.getElementById('login-user').value=username;
+  S.avatarData=null;
+}
+
+function doLogin(){
+  var username=document.getElementById('login-user').value.trim().toLowerCase();
+  var pass=document.getElementById('login-pass').value;
+  var user=S.users[username];
+  if(!user||user.pass!==pass){showAlert('alert-auth','Username หรือรหัสผ่านไม่ถูกต้อง');return;}
+  S.cur=user;showApp();
+}
+
+function logout(){
+  S.cur=null;S.selDate=null;S.selCourt=null;S.selSlot=null;
+  document.getElementById('page-auth').className='page active';
+  document.getElementById('page-main').className='page';
+  document.getElementById('nav-user').style.display='none';
+  document.getElementById('login-pass').value='';
+  switchAuth('login');
+}
+
+function showApp(){
+  document.getElementById('page-auth').className='page';
+  document.getElementById('page-main').className='page active';
+  var u=S.cur;
+  document.getElementById('nav-user').style.display='flex';
+  document.getElementById('nav-name').textContent=u.nick+' ('+u.username+')';
+  var av=document.getElementById('nav-avatar');
+  av.innerHTML=u.avatar?'<img src="'+u.avatar+'" style="width:100%;height:100%;object-fit:cover;border-radius:50%">':initials(u);
+  buildDates();switchMain('book');
+}
+
+function buildDates(){
+  var grid=document.getElementById('date-grid');grid.innerHTML='';
+  var today=new Date();today.setHours(0,0,0,0);
+  var days=['อา','จ','อ','พ','พฤ','ศ','ส'];
+  for(var i=0;i<=7;i++){
+    var d=new Date(today);d.setDate(today.getDate()+i);
+    var btn=document.createElement('div');
+    btn.className='date-btn'+(i===0?' active':'');
+    btn.innerHTML='<span style="font-size:11px;color:'+(i===0?'#fff':'var(--color-text-secondary)')+'">'+days[d.getDay()]+'</span><span class="day-num">'+d.getDate()+'</span>';
+    (function(date,el){el.onclick=function(){
+      document.querySelectorAll('.date-btn').forEach(function(x){x.className='date-btn';x.querySelector('span').style.color='var(--color-text-secondary)';});
+      el.className='date-btn active';el.querySelector('span').style.color='#fff';
+      S.selDate=date;S.selSlot=null;buildSlots();
+      document.getElementById('booking-form-card').style.display='none';
+    };})(d,btn);
+    grid.appendChild(btn);
+    if(i===0)S.selDate=d;
+  }
+  buildSlots();
+}
+
+function selectCourt(n){
+  S.selCourt=n;S.selSlot=null;
+  [1,2,3].forEach(function(i){document.getElementById('court-'+i).className='court-card'+(i===n?' selected':'');});
+  buildSlots();document.getElementById('booking-form-card').style.display='none';
+}
+
+function buildSlots(){
+  var grid=document.getElementById('slot-grid');grid.innerHTML='';
+  if(!S.selCourt||!S.selDate){grid.innerHTML='<div style="grid-column:1/-1;font-size:13px;color:var(--color-text-secondary);padding:8px">กรุณาเลือกสนามก่อน</div>';return;}
+  var key=fmtDateKey(S.selDate);
+  var booked=S.bookings.filter(function(b){return b.courtNum===S.selCourt&&b.dateKey===key;}).map(function(b){return b.slot;});
+  SLOTS.forEach(function(slot){
+    var isBooked=booked.indexOf(slot)>=0,isSelected=S.selSlot===slot;
+    var div=document.createElement('div');
+    div.className='slot '+(isBooked?'booked':isSelected?'selected':'available');
+    div.textContent=slot;
+    if(!isBooked){div.onclick=function(){S.selSlot=slot;buildSlots();updateBookingForm();};}
+    grid.appendChild(div);
+  });
+}
+
+function updateBookingForm(){
+  document.getElementById('booking-form-card').style.display='block';
+  document.getElementById('booking-summary').innerHTML='<strong>'+COURTS[S.selCourt-1]+'</strong> &nbsp;|&nbsp; '+fmtDate(S.selDate)+' &nbsp;|&nbsp; '+S.selSlot+' — '+(parseInt(S.selSlot)+1)+':00 น.';
+  S.participants=[];S.selPref=null;
+  document.getElementById('pref-open').className='pref-card';
+  document.getElementById('pref-private').className='pref-card';
+  buildParticipants();showAlert('alert-booking','');
+}
+
+function selectPref(p){
+  S.selPref=p;
+  document.getElementById('pref-open').className='pref-card'+(p==='open'?' selected':'');
+  document.getElementById('pref-private').className='pref-card'+(p==='private'?' selected':'');
+}
+
+function buildParticipants(){
+  var list=document.getElementById('participants-list');list.innerHTML='';
+  S.participants.forEach(function(name,i){
+    var row=document.createElement('div');row.className='participant-row';
+    row.innerHTML='<input type="text" value="'+name+'" style="flex:1" onchange="S.participants['+i+']=this.value"><button class="btn btn-sm btn-danger" onclick="removeParticipant('+i+')">×</button>';
+    list.appendChild(row);
+  });
+  if(S.participants.length<12){
+    var row=document.createElement('div');row.className='participant-row';
+    row.innerHTML='<input type="text" id="new-p" placeholder="ชื่อ-นามสกุล หรือชื่อเล่น" style="flex:1" onkeydown="if(event.key===\'Enter\')addParticipant()"><button class="btn btn-sm btn-primary" onclick="addParticipant()">+ เพิ่ม</button>';
+    list.appendChild(row);
+  }
+  document.getElementById('participant-count').textContent='เพิ่มได้อีก '+(12-S.participants.length)+' คน';
+}
+
+function addParticipant(){
+  var inp=document.getElementById('new-p');
+  if(!inp||!inp.value.trim())return;
+  if(S.participants.length>=12){showAlert('alert-booking','เพิ่มได้สูงสุด 12 คน');return;}
+  S.participants.push(inp.value.trim());buildParticipants();
+}
+
+function removeParticipant(i){S.participants.splice(i,1);buildParticipants();}
+
+function confirmBooking(){
+  showAlert('alert-booking','');
+  if(!S.selPref){showAlert('alert-booking','กรุณาเลือกความต้องการของสนาม');return;}
+  var key=fmtDateKey(S.selDate);
+  if(S.bookings.find(function(b){return b.courtNum===S.selCourt&&b.dateKey===key&&b.slot===S.selSlot;})){showAlert('alert-booking','ช่วงเวลานี้ถูกจองแล้ว');return;}
+  S.bookings.push({id:Date.now(),courtNum:S.selCourt,courtName:COURTS[S.selCourt-1],dateKey:key,dateLabel:fmtDate(S.selDate),slot:S.selSlot,pref:S.selPref,participants:S.participants.slice(),bookedBy:S.cur.username,bookedByName:S.cur.fname+' '+S.cur.lname,bookedByNick:S.cur.nick});
+  save();
+  showAlert('alert-booking','จองสนามสำเร็จ!','success');
+  S.selSlot=null;document.getElementById('booking-form-card').style.display='none';buildSlots();
+  setTimeout(function(){showAlert('alert-booking','');},2500);
+}
+
+function switchMain(tab){
+  document.getElementById('section-book').style.display=tab==='book'?'block':'none';
+  document.getElementById('section-mybooking').style.display=tab==='mybooking'?'block':'none';
+  document.getElementById('main-tab-book').className='tab'+(tab==='book'?' active':'');
+  document.getElementById('main-tab-mybooking').className='tab'+(tab==='mybooking'?' active':'');
+  if(tab==='mybooking')renderMyBookings();
+}
+
+function renderMyBookings(){
+  var list=document.getElementById('my-bookings-list');
+  var mine=S.bookings.filter(function(b){return b.bookedBy===S.cur.username;}).sort(function(a,b){return b.id-a.id;});
+  if(!mine.length){list.innerHTML='<div style="text-align:center;padding:40px;color:var(--color-text-secondary);font-size:14px">ยังไม่มีการจอง</div>';return;}
+  list.innerHTML='';
+  var hdr=document.createElement('div');hdr.className='booking-row';hdr.style.cssText='font-weight:500;font-size:13px;color:var(--color-text-secondary)';
+  hdr.innerHTML='<div>วันที่</div><div>สนาม</div><div>เวลา</div><div>ความต้องการ</div><div></div>';
+  list.appendChild(hdr);
+  mine.forEach(function(b){
+    var row=document.createElement('div');row.className='booking-row';
+    var badge=b.pref==='open'?'<span class="badge badge-green">เปิดรับ</span>':'<span class="badge badge-amber">ส่วนตัว</span>';
+    row.innerHTML='<div style="font-size:13px">'+b.dateLabel+'</div><div style="font-size:13px">'+b.courtName+'</div><div style="font-size:13px">'+b.slot+'</div><div>'+badge+'</div><div><button class="btn btn-sm btn-danger" onclick="cancelBooking('+b.id+')">ยกเลิก</button></div>';
+    list.appendChild(row);
+    if(b.participants.length){
+      var pr=document.createElement('div');pr.style.cssText='font-size:12px;color:var(--color-text-secondary);padding:0 0 10px;border-bottom:0.5px solid var(--color-border-tertiary)';
+      pr.innerHTML='ผู้เข้าร่วม: '+b.participants.join(', ');list.appendChild(pr);
+    }
+  });
+}
+
+function cancelBooking(id){S.bookings=S.bookings.filter(function(b){return b.id!==id;});save();renderMyBookings();buildSlots();}
+
+selectCourt(1);
+</script>
